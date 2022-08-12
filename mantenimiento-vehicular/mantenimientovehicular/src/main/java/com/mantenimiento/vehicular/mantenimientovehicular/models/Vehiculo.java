@@ -4,6 +4,7 @@ package com.mantenimiento.vehicular.mantenimientovehicular.models;
 import java.util.Calendar;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -24,7 +25,7 @@ import lombok.Setter;
 public class Vehiculo {
     
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column(name = "PLACA")    
     private String placa;
@@ -35,6 +36,13 @@ public class Vehiculo {
     @Column(name = "MARCA")    
     private String marca;
 
+
+
+    //relaciones
+
+    @OneToMany(mappedBy="vehiculo",cascade = CascadeType.REMOVE) //nombre del atributo en la clase B       
+    private List<Mantenimiento> mantenimientos;
+    
     //auditoria
     @Column(name = "CREATED_DATE")    
     private Calendar createdDate;
@@ -58,10 +66,4 @@ public class Vehiculo {
         updatedBy = "user2";
     }
     
-
-
-    //relaciones
-
-    @OneToMany(mappedBy="vehiculo") //nombre del atributo en la clase B       
-    private List<Mantenimiento> mantenimientos;
 }

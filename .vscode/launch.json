@@ -1,0 +1,14 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Spring Boot-MantenimientovehicularApplication<mantenimientovehicular>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "com.mantenimiento.vehicular.MantenimientovehicularApplication",
+            "projectName": "mantenimientovehicular",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        }
+    ]
+}

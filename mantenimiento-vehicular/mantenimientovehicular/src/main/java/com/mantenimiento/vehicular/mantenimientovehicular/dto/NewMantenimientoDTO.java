@@ -17,6 +17,5 @@ public class NewMantenimientoDTO {
     private Date fechaMantenimiento;
     private double precio;
     private String tipo;
-    private boolean finalizado;
 
 }
