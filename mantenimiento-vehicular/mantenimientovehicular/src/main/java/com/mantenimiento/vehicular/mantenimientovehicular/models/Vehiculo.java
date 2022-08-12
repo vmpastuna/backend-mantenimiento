@@ -23,7 +23,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class Vehiculo {
-    
+    //
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -42,7 +42,7 @@ public class Vehiculo {
 
     @OneToMany(mappedBy="vehiculo",cascade = CascadeType.REMOVE) //nombre del atributo en la clase B       
     private List<Mantenimiento> mantenimientos;
-    
+
     //auditoria
     @Column(name = "CREATED_DATE")    
     private Calendar createdDate;
