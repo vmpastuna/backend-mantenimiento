@@ -6,6 +6,7 @@ import javax.validation.Valid;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -33,6 +34,7 @@ public class MantenimientoController {
     }
 
     /* ================ CREATE ================ */
+    @Secured({"ROLE_GERENTE"})
     @PostMapping("/{id}/mantenimientos")
     public ResponseEntity<MantenimientoDTO> create(@PathVariable("id") Long id, @Valid @RequestBody NewMantenimientoDTO manteniDTO){
         MantenimientoDTO mantenimientoDTO = service.create(id, manteniDTO);
@@ -40,20 +42,23 @@ public class MantenimientoController {
     }
 
     /* ================ RETRIEVE ================ */
-    @GetMapping("/{idVehiculo}/matenimientos/{id}")
-    public ResponseEntity<MantenimientoVehiculoDTO> retrive(@PathVariable("idVehiculo") Long idVehiculo, @PathVariable("id") Long id){
-        MantenimientoVehiculoDTO result = service.retrieve(idVehiculo, id);
+    @Secured({"ROLE_GERENTE", "ROLE_CLIENTE"})
+    @GetMapping("/{idVehiculo}/mantenimientos/{idMantenimiento}")
+    public ResponseEntity<MantenimientoVehiculoDTO> retrive(@PathVariable("idVehiculo") Long idVehiculo, @PathVariable("idMantenimiento") Long idMantenimiento){
+        MantenimientoVehiculoDTO result = service.retrieve(idVehiculo, idMantenimiento);
         return ResponseEntity.ok().body(result);        
     }
 
     /* ================ UPDATE ================ */
-    @PutMapping("/{idVehiculo}/mantenimeintos/{id}")
+    @Secured({"ROLE_GERENTE"})
+    @PutMapping("/{idVehiculo}/mantenimientos/{id}")
     public ResponseEntity<MantenimientoVehiculoDTO> update(@RequestBody MantenimientoDTO manteniDTO, @PathVariable("idVehiculo") Long idVehiculo, @PathVariable("id") Long id){
         MantenimientoVehiculoDTO result = service.update(manteniDTO, idVehiculo, id);
         return ResponseEntity.ok().body(result);
     }
 
     /* ================ DELETE ================ */
+    @Secured({"ROLE_GERENTE"})
     @DeleteMapping("/{idVehiculo}/mantenimientos/{id}")
     public ResponseEntity<Void> delete(@PathVariable("idVehiculo") Long idVehiculo, @PathVariable("id") Long id){
         service.delete(idVehiculo, id);
@@ -61,6 +66,7 @@ public class MantenimientoController {
     }
 
     /* ================ LIST ================ */
+    @Secured({"ROLE_GERENTE", "ROLE_CLIENTE"})
     @GetMapping("/{id}/mantenimientos")
     public ResponseEntity<List<MantenimientoDTO>> list(@PathVariable("id") Long id){
         List<MantenimientoDTO> mantenimientos = service.list(id);

@@ -7,7 +7,7 @@ import com.mantenimiento.vehicular.mantenimientovehicular.dto.RepuestoDTO;
 
 public interface RepuestoService {
 
-    public List<RepuestoDTO> create(Long idVehiculo, Long idManteni, List<NewRepuestoDTO> list);
+    public List<RepuestoDTO> create(Long idVehiculo, Long idManteni, List<NewRepuestoDTO> repuestoC);
     public List<RepuestoDTO> list(Long idVehiculo, Long idManteni);
     public void remove(Long idVehiculo, Long idManteni);
 }

@@ -6,6 +6,7 @@ import javax.validation.Valid;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -34,10 +35,7 @@ public class VehiculoController {
     }
     
     /* ================ CREATE ================ */
-    /**
-     * @param examDTO
-     * @return
-     */
+    @Secured({"ROLE_GERENTE"})
     @PostMapping()
     public ResponseEntity<VehiculoDTO> create(@Valid @RequestBody NewVehiculoDTO vehiculoDTO){
         VehiculoDTO result = service.create(vehiculoDTO);
@@ -45,6 +43,7 @@ public class VehiculoController {
     }
 
     /* ================ RETRIEVE ================ */
+    @Secured({"ROLE_GERENTE", "ROLE_CLIENTE"})
     @GetMapping("/{id}")
     public ResponseEntity<VehiculoDTO> retrive(@PathVariable("id") Long id){
         VehiculoDTO result = service.retrieve(id);
@@ -52,6 +51,7 @@ public class VehiculoController {
     }
 
     /* ================ UPDATE ================ */
+    @Secured({"ROLE_GERENTE"})
     @PutMapping("/{id}")
     public ResponseEntity<VehiculoDTO> update(@RequestBody VehiculoDTO vehiculoDTO, @PathVariable("id") Long id){
      VehiculoDTO result = service.update(vehiculoDTO, id);
@@ -59,6 +59,7 @@ public class VehiculoController {
     }
 
     /* ================ DELETE ================ */
+    @Secured({"ROLE_GERENTE"})
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable("id") Long id){
         service.delete(id);
@@ -66,6 +67,7 @@ public class VehiculoController {
     }
 
     /* ================ LIST ================ */
+    @Secured({"ROLE_GERENTE", "ROLE_CLIENTE"})
     @GetMapping("/{page}/{size}")
     public ResponseEntity<List<VehiculoListDTO>> list(@PathVariable("page") int page, 
         @PathVariable("size") int size,
@@ -75,6 +77,7 @@ public class VehiculoController {
     }
 
      /* ================ COUNT ================ */
+     @Secured({"ROLE_GERENTE", "ROLE_CLIENTE"})
      @GetMapping("/count")
      public ResponseEntity<Long> count(){
          long result = service.count();

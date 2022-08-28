@@ -1,7 +1,7 @@
 package com.mantenimiento.vehicular.mantenimientovehicular.dto;
 
 
-import java.util.Date;
+
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,7 +14,7 @@ public class NewMantenimientoDTO {
     
     
     private String nombre;
-    private Date fechaMantenimiento;
+    private String fechaMantenimiento;
     private double precio;
     private String tipo;
 

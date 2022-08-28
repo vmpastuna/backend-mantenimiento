@@ -1,7 +1,6 @@
 package com.mantenimiento.vehicular.mantenimientovehicular.models;
 
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -32,14 +31,21 @@ public class Mantenimiento {
     @Column(name = "NOMBRE")
     private String nombre;
     @Column(name = "FECHA_MANTENIMIENTO")
-    private Date fechaMantenimiento;
+    private String fechaMantenimiento;
     @Column(name = "PRECIO")
     private double precio;
     @Column(name = "TIPO")
     private String tipo;
 
+    //relaciones 
+    @ManyToOne
+    @JoinColumn(name="VEHICULO_ID", nullable=false)
+    private Vehiculo vehiculo;
 
-    //auditoria
+    @OneToMany(mappedBy = "mantenimiento")
+    private List<Repuesto> repuestos;
+    
+        //auditoria
 
     @Column(name = "CREATED_DATE")    
     private Calendar createdDate;
@@ -63,13 +69,7 @@ public class Mantenimiento {
         updatedBy = "user2";
     }
 
-    //relaciones 
-    @ManyToOne
-        @JoinColumn(name="VEHICULO_ID", nullable=false)
-        private Vehiculo vehiculo;
-
-        @OneToMany(mappedBy = "mantenimiento")
-        private List<Repuesto> repuestos;
+     
 
 
 }

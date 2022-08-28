@@ -38,23 +38,29 @@ public class RepuestoServiceImpl implements RepuestoService {
 
     @Override
     @Transactional
-    public List<RepuestoDTO> create(Long idVehiculo, Long idManteni, List<NewRepuestoDTO> repuestos) {
+    public List<RepuestoDTO> create(Long idVehiculo, Long idManteni, List<NewRepuestoDTO> repuestoC) {
         Vehiculo vehiculo = vehiculoRepository.findById(idVehiculo)
                 .orElseThrow(() -> new ResourceNotFoundException("Vehiculo not found"));
         Mantenimiento mantenimiento = manteniRepository.findById(idManteni)
                 .orElseThrow(() -> new ResourceNotFoundException("Mantenimiento not found"));
         mantenimiento.setVehiculo(vehiculo);
         List<RepuestoDTO> result = new ArrayList<RepuestoDTO>();
-        for (NewRepuestoDTO op : repuestos) {
+        
+        repuestoC.forEach(op -> {
+            Repuesto repuesto = modelMapper.map(op, Repuesto.class);
+            //repuesto.setMantenimiento(mantenimiento);
+            //epuestoRepository.save(repuesto);
+            result.add(modelMapper.map(repuesto, RepuestoDTO.class));
+         });
+        
+        
+        /*for (NewRepuestoDTO op : repuestoC) {
             Repuesto repuesto = modelMapper.map(op, Repuesto.class);
             repuesto.setMantenimiento(mantenimiento);
             repuestoRepository.save(repuesto);
             result.add(modelMapper.map(repuesto, RepuestoDTO.class));
         }
-        /*
-         * options.forEach(op -> {
-         * });
-         */
+        */
         return result;
     }
 
