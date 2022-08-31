@@ -34,26 +34,30 @@ public class RepuestoController {
 
     /* ================ CREATE ================ */
     @Secured({"ROLE_GERENTE"})
-    @PostMapping("/{id}/mantenimientos/{idManteni}/repuestos")
-    public ResponseEntity<List<RepuestoDTO>> create(@PathVariable("id") Long id, @PathVariable("idManteni") Long idManteni, @Valid @RequestBody List<NewRepuestoDTO> repuestosDTO){
-        List<RepuestoDTO> repuestoDTOs = service.create(id, idManteni, repuestosDTO);
-        return ResponseEntity.status(HttpStatus.CREATED).body(repuestoDTOs);        
+    @PostMapping("/{id}/repuestos")
+    public ResponseEntity<RepuestoDTO> create(@PathVariable("id") Long id, @Valid @RequestBody NewRepuestoDTO repuestoDTO){
+        RepuestoDTO repuesDTO = service.create(id, repuestoDTO);
+        return ResponseEntity.status(HttpStatus.CREATED).body(repuesDTO);        
     }
+
+    
+
 
     /* ================ DELETE ================ */
     @Secured({"ROLE_GERENTE"})
-    @DeleteMapping("/{id}/mantenimientos/{idManteni}/repuestos")
-    public ResponseEntity<List<RepuestoDTO>> delete(@PathVariable("id") Long id, @PathVariable("idManteni") Long idManteni){
-        service.remove(id, idManteni);
+    @DeleteMapping("/{idVehi}/repuestos/{id}")
+    public ResponseEntity<Void> delete(@PathVariable("idVehi") Long idVehi, @PathVariable("id") Long id){
+        service.delete(idVehi, id);
         return ResponseEntity.noContent().build();
     }
 
     /* ================ LIST ================ */
     @Secured({"ROLE_GERENTE", "ROLE_CLIENTE"})
-    @GetMapping("/{id}/mantenimientos/{idManteni}/repuestos")
-    public ResponseEntity<List<RepuestoDTO>> list(@PathVariable("id") Long id, @PathVariable("idManteni") Long idManteni){
-        List<RepuestoDTO> repuestoDTOs = service.list(id, idManteni);
-        return ResponseEntity.status(HttpStatus.OK).body(repuestoDTOs);        
+    @GetMapping("/{id}/repuestos")
+    public ResponseEntity<List<RepuestoDTO>> list(@PathVariable("id") Long id){
+        List<RepuestoDTO> repuestos = service.list(id);
+        return ResponseEntity.ok().body(repuestos);        
     }
+
 
 }

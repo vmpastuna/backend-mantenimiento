@@ -1,6 +1,5 @@
 package com.mantenimiento.vehicular.mantenimientovehicular.services.impl;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -12,11 +11,9 @@ import com.mantenimiento.vehicular.mantenimientovehicular.dto.NewRepuestoDTO;
 import com.mantenimiento.vehicular.mantenimientovehicular.dto.RepuestoDTO;
 import com.mantenimiento.vehicular.mantenimientovehicular.exceptions.NoContentException;
 import com.mantenimiento.vehicular.mantenimientovehicular.exceptions.ResourceNotFoundException;
-import com.mantenimiento.vehicular.mantenimientovehicular.models.Mantenimiento;
-import com.mantenimiento.vehicular.mantenimientovehicular.models.Repuesto;
+ import com.mantenimiento.vehicular.mantenimientovehicular.models.Repuesto;
 import com.mantenimiento.vehicular.mantenimientovehicular.models.Vehiculo;
-import com.mantenimiento.vehicular.mantenimientovehicular.repositories.MantenimientoRepository;
-import com.mantenimiento.vehicular.mantenimientovehicular.repositories.RepuestoRepository;
+ import com.mantenimiento.vehicular.mantenimientovehicular.repositories.RepuestoRepository;
 import com.mantenimiento.vehicular.mantenimientovehicular.repositories.VehiculoRepository;
 import com.mantenimiento.vehicular.mantenimientovehicular.services.RepuestoService;
 
@@ -25,72 +22,45 @@ public class RepuestoServiceImpl implements RepuestoService {
 
     final ModelMapper modelMapper;
     final RepuestoRepository repuestoRepository;
-    final MantenimientoRepository manteniRepository;
     final VehiculoRepository vehiculoRepository;
 
-    public RepuestoServiceImpl(RepuestoRepository rep, MantenimientoRepository manteni, VehiculoRepository veh,
-            ModelMapper mapper) {
+    public RepuestoServiceImpl(RepuestoRepository rep, VehiculoRepository veh,ModelMapper mapper) {
         this.modelMapper = mapper;
         this.repuestoRepository = rep;
-        this.manteniRepository = manteni;
         this.vehiculoRepository = veh;
     }
 
     @Override
     @Transactional
-    public List<RepuestoDTO> create(Long idVehiculo, Long idManteni, List<NewRepuestoDTO> repuestoC) {
-        Vehiculo vehiculo = vehiculoRepository.findById(idVehiculo)
-                .orElseThrow(() -> new ResourceNotFoundException("Vehiculo not found"));
-        Mantenimiento mantenimiento = manteniRepository.findById(idManteni)
-                .orElseThrow(() -> new ResourceNotFoundException("Mantenimiento not found"));
-        mantenimiento.setVehiculo(vehiculo);
-        List<RepuestoDTO> result = new ArrayList<RepuestoDTO>();
-        
-        repuestoC.forEach(op -> {
-            Repuesto repuesto = modelMapper.map(op, Repuesto.class);
-            //repuesto.setMantenimiento(mantenimiento);
-            //epuestoRepository.save(repuesto);
-            result.add(modelMapper.map(repuesto, RepuestoDTO.class));
-         });
-        
-        
-        /*for (NewRepuestoDTO op : repuestoC) {
-            Repuesto repuesto = modelMapper.map(op, Repuesto.class);
-            repuesto.setMantenimiento(mantenimiento);
-            repuestoRepository.save(repuesto);
-            result.add(modelMapper.map(repuesto, RepuestoDTO.class));
-        }
-        */
-        return result;
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public List<RepuestoDTO> list(Long idVehiculo, Long idManteni) {
-        Vehiculo vehiculo = vehiculoRepository.findById(idVehiculo)
-                .orElseThrow(() -> new ResourceNotFoundException("Vehiculo not found"));
-        Mantenimiento mantenimiento = manteniRepository.findById(idManteni)
-                .orElseThrow(() -> new ResourceNotFoundException("Mantenimiento not found"));
-        mantenimiento.setVehiculo(vehiculo);
-        if (mantenimiento.getRepuestos().isEmpty())
-            throw new NoContentException("Repuesto is empty");
-        return mantenimiento.getRepuestos().stream().map(op -> modelMapper.map(op, RepuestoDTO.class))
-                .collect(Collectors.toList());
+    public RepuestoDTO create(Long idVehi, NewRepuestoDTO repuestoDTO) {
+        Vehiculo vehiculo = vehiculoRepository.findById(idVehi)
+            .orElseThrow(()-> new ResourceNotFoundException("Vehiculo not found"));
+        Repuesto repuesto = modelMapper.map(repuestoDTO, Repuesto.class); 
+        repuesto.setVehiculo(vehiculo);   
+        repuestoRepository.save(repuesto);
+        return modelMapper.map(repuesto, RepuestoDTO.class); 
     }
 
     @Override
     @Transactional
-    public void remove(Long idVehiculo, Long idManteni) {
-        Vehiculo vehiculo = vehiculoRepository.findById(idVehiculo)
-                .orElseThrow(() -> new ResourceNotFoundException("Vehiculo not found"));
-        Mantenimiento mantenimiento = manteniRepository.findById(idManteni)
-                .orElseThrow(() -> new ResourceNotFoundException("Mantenimiento not found"));
-        mantenimiento.setVehiculo(vehiculo);
-        if (mantenimiento.getRepuestos().isEmpty())
-            throw new NoContentException("Repuestos is empty");
-        mantenimiento.getRepuestos().forEach(op -> {
-            repuestoRepository.delete(op);
-        });
+    public void delete(Long idVehi, Long id) {
+        Vehiculo vehiculo = vehiculoRepository.findById(idVehi)
+        .orElseThrow(()-> new ResourceNotFoundException("Vehiculo not found"));
+        Repuesto repuesto = repuestoRepository.findById(id).orElseThrow(()-> new ResourceNotFoundException("Repuesto not found"));
+        repuesto.setVehiculo(vehiculo);
+        repuestoRepository.deleteById(repuesto.getId());  
+    }
+
+    @Override
+    @Transactional(readOnly=true)
+    public List<RepuestoDTO> list(Long idVehi) {
+        Vehiculo vehiculo = vehiculoRepository.findById(idVehi)
+            .orElseThrow(()-> new ResourceNotFoundException("Vehiculo not found"));
+        List<Repuesto> repuestos = repuestoRepository.findByVehiculo(vehiculo);
+        if(repuestos.isEmpty()) throw new NoContentException("Repuesto is empty");
+        //Lambda ->
+        return repuestos.stream().map(q -> modelMapper.map(q, RepuestoDTO.class) )
+            .collect(Collectors.toList());
     }
 
 }

@@ -42,8 +42,7 @@ public class Mantenimiento {
     @JoinColumn(name="VEHICULO_ID", nullable=false)
     private Vehiculo vehiculo;
 
-    @OneToMany(mappedBy = "mantenimiento")
-    private List<Repuesto> repuestos;
+   
     
         //auditoria
 

@@ -59,8 +59,9 @@ public class Repuesto {
     }
     //relaciones
     @ManyToOne
-    @JoinColumn(name="MANTENIMIENTO_ID", nullable=false)
-    private Mantenimiento mantenimiento; 
+    @JoinColumn(name="VEHICULO_ID", nullable=false)
+    private Vehiculo vehiculo;
+
     
 
 
